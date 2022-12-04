@@ -106,7 +106,7 @@ namespace scenarioengine
             void Scan();
 
             // Returns true if object is considered cutting-in to ego lane
-            virtual bool CheckLateralSafety(Object* obj, int dLaneId, double dist_long, double dist_lat) { return false; }
+            virtual bool CheckLateralSafety(Object* obj, int dLaneId, double dist_long, double dist_lat) { (void)obj; (void)dLaneId; (void)dist_long; (void)dist_lat; return false; }
 
             // Returns true if critical situation and intervention needed
             virtual bool CheckCritical() { return false; };
@@ -162,7 +162,7 @@ namespace scenarioengine
             double ReactCritical() override;
             double MinDist() override;
 
-            bool CheckSafety(Vehicle* obj, int dLaneId, double dist_long, double dist_lat) { return false; }
+            bool CheckSafety(Vehicle* obj, int dLaneId, double dist_long, double dist_lat) { (void)obj; (void)dLaneId; (void)dist_long; (void)dist_lat; return false; }
             bool CheckSafetyCutIn(Vehicle* obj, double speed_long, double speed_lat, double dt);
             double React(double speed_long, double dt);
             std::string GetModelName() override { return "Regulation"; }
@@ -205,8 +205,8 @@ namespace scenarioengine
             double min_jerk_;
             double release_deceleration_;  // deceleration when not stepping on the accelerator pedal(I think)
             double critical_ttc_;
-            double timer_;
             Phase phase_;
+            double timer_;
         };
 
         class RSS : Model
@@ -262,7 +262,7 @@ namespace scenarioengine
 
 		static const char* GetTypeNameStatic() { return CONTROLLER_ALKS_R157SM_TYPE_NAME; }
 		virtual const char* GetTypeName() { return GetTypeNameStatic(); }
-		static const int GetTypeStatic() { return CONTROLLER_ALKS_R157SM; }
+		static int GetTypeStatic() { return CONTROLLER_ALKS_R157SM; }
 		virtual int GetType() { return GetTypeStatic(); }
 
 		void Init();

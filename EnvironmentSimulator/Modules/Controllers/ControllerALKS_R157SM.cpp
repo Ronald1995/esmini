@@ -33,30 +33,30 @@ using namespace scenarioengine;
 
 Controller* scenarioengine::InstantiateControllerALKS_R157SM(void* args)
 {
-	Controller::InitArgs* initArgs = (Controller::InitArgs*)args;
+	Controller::InitArgs* initArgs = static_cast<Controller::InitArgs*>(args);
 
 	return new ControllerALKS_R157SM(initArgs);
 }
 
-ControllerALKS_R157SM::ControllerALKS_R157SM(InitArgs* args) : model_(0), entities_(0), Controller(args)
+ControllerALKS_R157SM::ControllerALKS_R157SM(InitArgs* args) : Controller(args), model_(0), entities_(0)
 {
     if (args && args->properties)
     {
         if (args->properties->GetValueStr("model") == "Regulation")
         {
-            model_ = (ControllerALKS_R157SM::Model*) new Regulation();
+            model_ = reinterpret_cast<ControllerALKS_R157SM::Model*>(new Regulation());
         }
         else if (args->properties->GetValueStr("model") == "FSM")
         {
-            model_ = (ControllerALKS_R157SM::Model*) new FSM();
+            model_ = reinterpret_cast<ControllerALKS_R157SM::Model*>(new FSM());
         }
         else if (args->properties->GetValueStr("model") == "ReferenceDriver")
         {
-            model_ = (ControllerALKS_R157SM::Model*) new ReferenceDriver();
+            model_ = reinterpret_cast<ControllerALKS_R157SM::Model*>(new ReferenceDriver());
         }
         else if (args->properties->GetValueStr("model") == "RSS")
         {
-            model_ = (ControllerALKS_R157SM::Model*) new RSS();
+            model_ = reinterpret_cast<ControllerALKS_R157SM::Model*>(new RSS());
         }
         else
         {
@@ -129,7 +129,7 @@ void ControllerALKS_R157SM::Assign(Object* object)
 
     if (model_)
     {
-        model_->SetVehicle((Vehicle*)object);
+        model_->SetVehicle(static_cast<Vehicle*>(object));
     }
 
     Controller::Assign(object);
@@ -151,10 +151,12 @@ void ControllerALKS_R157SM::SetScenarioEngine(ScenarioEngine* scenario_engine)
     {
         model_->SetScenarioEngine(scenario_engine);
     }
-};
+}
 
 void ControllerALKS_R157SM::ReportKeyEvent(int key, bool down)
 {
+    (void)key;
+	(void)down;
 }
 
 void ControllerALKS_R157SM::Model::Scan()
@@ -168,7 +170,7 @@ void ControllerALKS_R157SM::Model::Scan()
     roadmanager::PositionDiff diff;
     double min_dist = LARGE_NUMBER;
     Object* old_object_in_focus = object_in_focus_.obj;
-    int index = -1;
+    // int index = -1; // TODO: why? we dont use this at all
 
     ResetObjectInFocus();
 
@@ -225,7 +227,7 @@ void ControllerALKS_R157SM::Model::Scan()
                             {
                                 object_in_focus_.ttc = LARGE_NUMBER;
                             }
-                            index = (int)i;
+                            // index = static_cast<int>(i);
                             min_dist = dist_long;
                         }
                     }
@@ -277,10 +279,10 @@ void ControllerALKS_R157SM::Model::ResetReactionTime()
 
 
 ControllerALKS_R157SM::Model::Model(ModelType type, double reaction_time,
-    double max_dec_, double max_range_) : type_(type), rt_(reaction_time), entities_(0),
-    rt_counter_(0.0), max_dec_(max_dec_), max_range_(max_range_), max_acc_(3.0), max_acc_lat_(1.0), veh_(nullptr),
-    set_speed_(0.0), log_level_(1),model_mode_(ModelMode::CRUISE_NO_TARGET), acc_(0.0), cruise_comfort_acc_(2.0),
-    cut_in_detected_timestamp_(0.0), cruise_comfort_dec_(2.0), cruise_max_acc_(3.0), cruise_max_dec_(4.0), cruise_(true)
+    double max_dec, double max_range) : type_(type), veh_(nullptr), entities_(0), cut_in_detected_timestamp_(0.0), rt_(reaction_time),
+    rt_counter_(0.0), max_dec_(max_dec), max_range_(max_range), max_acc_(3.0), max_acc_lat_(1.0),
+    set_speed_(0.0), acc_(0.0), cruise_comfort_acc_(2.0), cruise_comfort_dec_(2.0), cruise_max_acc_(3.0), cruise_max_dec_(4.0),
+    model_mode_(ModelMode::CRUISE_NO_TARGET), log_level_(1), cruise_(true)
 {
     ResetObjectInFocus();
 }
@@ -379,7 +381,7 @@ void ControllerALKS_R157SM::Model::SetScenarioEngine(ScenarioEngine* scenario_en
 {
     scenario_engine_ = scenario_engine;
     entities_ = &scenario_engine_->entities_;
-};
+}
 
 double ControllerALKS_R157SM::Regulation::MinDist()
 {
@@ -404,6 +406,7 @@ double ControllerALKS_R157SM::Regulation::MinDist()
 //   Return true if safe
 bool ControllerALKS_R157SM::Regulation::CheckLateralSafety(Object* obj, int dLaneId, double dist_long, double dist_lat)
 {
+    (void)dist_long;
     if (obj == nullptr || dist_lat == LARGE_NUMBER)
     {
         return true;
@@ -418,16 +421,16 @@ bool ControllerALKS_R157SM::Regulation::CheckLateralSafety(Object* obj, int dLan
         if (obj->type_ == Object::Type::VEHICLE)
         {
             // Find out position of front wheel (axis)
-            x = ((Vehicle*)obj)->front_axle_.positionX;
+            x = (static_cast<Vehicle*>(obj))->front_axle_.positionX;
         }
         else
         {
             // Use front side of bounding box
-            x = obj->boundingbox_.dimensions_.length_ / 2.0;
+            x = static_cast<double>(obj->boundingbox_.dimensions_.length_) / 2.0;
         }
 
         // Look at side towards Ego vehicle lane
-        double y = -1 * SIGN(dLaneId) * obj->boundingbox_.dimensions_.width_ / 2.0;
+        double y = -1 * SIGN(dLaneId) * static_cast<double>(obj->boundingbox_.dimensions_.width_) / 2.0;
         double xr = 0.0, yr = 0.0;
         RotateVec2D(x, y, obj->pos_.GetHRelative(), xr, yr);
         double offset = obj->pos_.GetOffset() + yr;
@@ -484,6 +487,7 @@ double ControllerALKS_R157SM::Regulation::ReactCritical()
 
 bool ControllerALKS_R157SM::ReferenceDriver::CheckLateralSafety(Object* obj, int dLaneId, double dist_long, double dist_lat)
 {
+    (void)dist_long;
     if (obj == nullptr || dist_lat == LARGE_NUMBER)
     {
         return true;
@@ -645,6 +649,8 @@ double ControllerALKS_R157SM::ReferenceDriver::MinDist()
 
 bool ControllerALKS_R157SM::RSS::CheckLateralSafety(Object* obj, int dLaneId, double dist_long, double dist_lat)
 {
+    (void)dLaneId;
+    (void)dist_long;
     if (obj == nullptr || dist_lat == LARGE_NUMBER)
     {
         return true;
