@@ -596,7 +596,7 @@ extern "C"
 
 	SE_DLL_API void SE_RegisterParameterDeclarationCallback(void (*fnPtr)(void*), void* user_data)
 	{
-		RegisterParameterDeclarationCallback(fnPtr, user_data);
+		// RegisterParameterDeclarationCallback(fnPtr, user_data); // Todo: Melih
 	}
 
 	SE_DLL_API int SE_Init(const char* oscFilename, int disable_ctrls, int use_viewer, int threads, int record)
@@ -822,7 +822,7 @@ extern "C"
 	SE_DLL_API void SE_Close()
 	{
 		resetScenario();
-		RegisterParameterDeclarationCallback(nullptr, nullptr);
+		// RegisterParameterDeclarationCallback(nullptr, nullptr); // TODO: @Melih
 	}
 
 	SE_DLL_API void SE_LogToConsole(bool mode)
