@@ -23,6 +23,8 @@
 
 using namespace scenarioengine;
 
+static CallBack paramDeclCallback = {0, 0};
+
 namespace scenarioengine
 {
 	void RegisterParameterDeclarationCallback(ParamDeclCallbackFunc func, void* data)

@@ -29,11 +29,11 @@ namespace scenarioengine
 {
 	typedef void (*ParamDeclCallbackFunc)(void*);
 
-	static struct
+	struct CallBack
 	{
 		ParamDeclCallbackFunc func;
 		void* data;
-	} paramDeclCallback = {0, 0};
+	};
 
 	void RegisterParameterDeclarationCallback(ParamDeclCallbackFunc func, void* data);
 
