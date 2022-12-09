@@ -38,7 +38,7 @@ using namespace scenarioengine;
 static const double stepSize = 0.01;
 static const double maxStepSize = 0.1;
 static const double minStepSize = 0.001;
-static bool pause = false;  // continuous play
+static bool pause_player = false;  // continuous play
 static double time_scale = 1.0;
 static bool no_ghost = false;
 static bool no_ghost_model = false;
@@ -270,7 +270,7 @@ void ReportKeyEvent(viewer::KeyEvent* keyEvent, void* data)
 				}
 				for (int i = 0; i < steps; i++) player->GoToNextFrame();
 
-				pause = true;  // step by step
+				pause_player = true;  // step by step
 			}
 		}
 		else if (keyEvent->key_ == static_cast<int>(KeyType::KEY_Left))
@@ -291,12 +291,12 @@ void ReportKeyEvent(viewer::KeyEvent* keyEvent, void* data)
 				}
 				for (int i = 0; i < steps; i++) player->GoToPreviousFrame();
 
-				pause = true;  // step by step
+				pause_player = true;  // step by step
 			}
 		}
 		else if (keyEvent->key_ == static_cast<int>(KeyType::KEY_Space))
 		{
-			pause = !pause;
+			pause_player = !pause_player;
 		}
 		else if (keyEvent->key_ == 'H')
 		{
@@ -826,7 +826,7 @@ int main(int argc, char** argv)
 			simTime = player->GetTime();  // potentially wrapped for repeat
 			double targetSimTime = simTime;
 
-			if (!pause)
+			if (!pause_player)
 			{
 				if (viewer->GetSaveImagesToFile())
 				{
@@ -854,7 +854,7 @@ int main(int argc, char** argv)
 
 			do
 			{
-				if (!(pause || viewer->GetSaveImagesToFile()))
+				if (!(pause_player || viewer->GetSaveImagesToFile()))
 				{
 					player->GoToDeltaTime(deltaSimTime, true);
 					simTime = player->GetTime();  // potentially wrapped for repeat
@@ -950,7 +950,7 @@ int main(int argc, char** argv)
 									if (!overlap)
 									{
 										overlap = true;
-										pause = true;
+										pause_player = true;
 										double rel_speed = abs((player->GetState(scenarioEntity[0].id))->info.speed - (player->GetState(scenarioEntity[i].id)->info.speed)) * 3.6;
 										double rel_angle = (scenarioEntity[0].pos.h - scenarioEntity[i].pos.h) * 180 / M_PI;
 										LOG("Collision between %d and %d at time %.2f.\n- Relative speed %.2f km/h\n- Angle %.2f degrees (ego to target)",
@@ -966,7 +966,7 @@ int main(int argc, char** argv)
 					}
 				}
 
-			} while (!pause &&
+			} while (!pause_player &&
 				simTime < player->GetStopTime() - SMALL_NUMBER &&  // As long as time is < end
 				simTime > player->GetStartTime() + SMALL_NUMBER &&  // As long as time is > start time
 				(deltaSimTime < 0 ? (player->GetTime() > targetSimTime) : (player->GetTime() < targetSimTime)));  // until reached target timestep
