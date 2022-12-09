@@ -77,7 +77,6 @@ int ScenarioEngine::InitScenario(std::string oscFilename, bool disable_controlle
 		{
 			if (scenarioReader->loadOSCFile(file_name_candidates[i].c_str()) != 0)
 			{
-				//throw std::invalid_argument(std::string("Failed to load OpenSCENARIO file ") + oscFilename);
 				LOG(("Failed to load OpenSCENARIO file " + oscFilename).c_str());
 				return -3;
 			}
@@ -795,8 +794,6 @@ int ScenarioEngine::parseScenario()
 
 		if (i == file_name_candidates.size())
 		{
-			throw std::invalid_argument(std::string("Failed to ") + (located ? "load" : "find") + \
-				" OpenDRIVE file " + std::string(getOdrFilename().c_str()));
 			LOG((std::string("Failed to ") + (located ? "load" : "find") + " OpenDRIVE file " + getOdrFilename().c_str()).c_str());
 			return -1;
 		}
@@ -1130,7 +1127,7 @@ void ScenarioEngine::SetupGhost(Object* object)
 	// FollowGhostController special treatment:
 	// Create a new (ghost) vehicle and copy all actions from base object
 
-	Vehicle* ghost = new Vehicle(*static_cast<Vehicle*>(object));
+	Vehicle* ghost = new Vehicle(*(static_cast<Vehicle*>(object)));
 	object->SetGhost(ghost);
 	ghost->name_ += "_ghost";
 	ghost->ghost_ = 0;
