@@ -484,9 +484,9 @@ void Variables::parseVariableDeclarations(pugi::xml_node variableDeclarationsNod
 		}
 
 		std::string type_str;
-		if (pdChild.attribute("VariableType"))
+		if (pdChild.attribute("variableType"))
 		{
-			type_str = pdChild.attribute("VariableType").value();
+			type_str = pdChild.attribute("variableType").value();
 		}
 		else
 		{

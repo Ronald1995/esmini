@@ -4,7 +4,9 @@
 <OpenSCENARIO>
     <FileHeader revMajor="1" revMinor="0" date="2019-06-09T10:00:00" description="Cut-in" author="esmini-team"/>
     <VariableDeclarations>
-        <VariableDeclaration name="DummyVariable" VariableType="double" value="2"/>
+        <VariableDeclaration name="DummyVariable" variableType="double" value="2"/>
+        <VariableDeclaration name="DummyVariable2" variableType="boolean" value="true"/>
+        <VariableDeclaration name="DummyVariable3" variableType="string" value="lane_change_var"/>
     </VariableDeclarations>
     <CatalogLocations>
         <VehicleCatalog>
@@ -105,5 +107,14 @@
                 </StartTrigger>
             </Act>
         </Story>
+        <StopTrigger>
+            <ConditionGroup>
+                <Condition name="StopCondition" delay="0" conditionEdge="risingOrFalling">
+                    <ByValueCondition>
+                        <SimulationTimeCondition value="10" rule="greaterThan"/>
+                    </ByValueCondition>
+                </Condition>
+            </ConditionGroup>
+        </StopTrigger>
     </Storyboard>
 </OpenSCENARIO>
