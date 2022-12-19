@@ -2,12 +2,21 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import xml.etree.ElementTree as ET
 import json
 import os
-from support.python.src.globals import ESMINI_DIRECTORY_SUPPORT, ESMINI_DIRECTORY_ROOT
-from support.python.src.formatter import format_green, format_yellow
+
+from support.python.src.command.run.run import Run
+from support.python.src.globals import (
+    ESMINI_DIRECTORY_EXTERNALS,
+    ESMINI_DIRECTORY_SUPPORT,
+)
+from support.python.src.formatter import (
+    format_green,
+    format_yellow,
+    format_red
+)
 
 
 class OpenDrive:
-    def generate_file(self, data, output):
+    def generate_file(self, data,outputfolder):
         """
         Handles the generation of the .json and .hpp files.
 
@@ -16,10 +25,10 @@ class OpenDrive:
         data (dict): dictionary used in jinja generation
         output (str): name of file to generate
         """
-        outputfolder = os.path.join(ESMINI_DIRECTORY_SUPPORT, "generated")
+
         if not os.path.exists(outputfolder):
             os.mkdir(outputfolder)
-        output_file = os.path.join(outputfolder, output + ".hpp")
+        output_file = os.path.join(outputfolder, data["name"] + ".hpp")
 
         # Dump dict to json for testing
         # self.print_dict(output_file, data)
@@ -33,7 +42,7 @@ class OpenDrive:
 
     def create_exception_shared(self, data, outputfolder):
         """
-        Generate a exception shared dictionary for "struct e_countryCode"
+        Creates a exception shared dictionary for "struct e_countryCode"
         and generates a shared hpp file for the dictionary.\n
         This to fix a problem with mutual inclusion between signal and road
 
@@ -79,10 +88,12 @@ class OpenDrive:
         template = env.get_template(template_file)
         content = template.render(data)
         output_file = os.path.join(outputfolder, "Shared.hpp")
-        with open(output_file, mode="w", encoding="utf-8") as message:
-            message.write(content)
-        filename = output_file.split("/")[-1]
-        print(format_yellow(f"Generated exception file: {filename}"))
+        try:
+            with open(output_file, mode="w", encoding="utf-8") as message:
+                message.write(content)
+        except OSError as e:
+                print(format_red(f"{e}"))
+        print(format_yellow("Generated exception file:"+  output_file.split("/")[-1]))
 
     def create_hpp_files(self, output_file, data):
         """
@@ -103,10 +114,12 @@ class OpenDrive:
         )
         template = env.get_template(template_file)
         content = template.render(data)
-        with open(output_file, mode="w", encoding="utf-8") as message:
-            message.write(content)
-        filename = output_file.split("/")[-1]
-        print(format_green(f"Generated: {filename}"))
+        try:
+            with open(output_file, mode="w", encoding="utf-8") as message:
+                message.write(content)
+        except OSError as e:
+                print(format_red(f"{e}"))
+        print(format_green("Generated: "+ output_file.split("/")[-1]))
 
     def print_dict(self, output_file, data):
         """
@@ -118,10 +131,13 @@ class OpenDrive:
         output_file (path): the name/location of file to generate
         data (dict): dictionary used in jinja generation
         """
-        with open(output_file + ".json", mode="w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
-            file.close()
-        print((f"Printed dictionary"))
+        try:
+            with open(output_file + ".json", mode="w", encoding="utf-8") as file:
+                json.dump(data, file, indent=4)
+                file.close()
+        except OSError as e:
+                print(format_red(f"{e}"))
+        print("Printed dictionary")
 
     def parser(self, file, name, version):
         """
@@ -135,7 +151,7 @@ class OpenDrive:
 
         Returns:
         ---------
-        (ref_list,dict) <- containing the parsed and processed file and all refences from the file
+        tuple(ref_list,dict) <- (list) of all references from the file, (dict) of the parsed post-processed file
         """
         parsed_data = {}
         tree = ET.parse(file)
@@ -145,7 +161,8 @@ class OpenDrive:
         parsed_data = self.union_to_struct(parsed_data)
         ref_list = self.create_ref_list([], name, parsed_data)
         ordered = False
-        while not ordered:
+
+        while not ordered: # Runs until dictionary is not changed between two runs -> ordered
             old_dict = parsed_data.copy()
             parsed_data = self.order_dictionary(parsed_data)
             check = True
@@ -153,6 +170,7 @@ class OpenDrive:
                 if oldkey != newkey:
                     check = False
             ordered = check
+
         parsed_data = self.create_inheritance(parsed_data)
         parsed_dict = {"name": name, "version": version, "data": parsed_data}
         return (ref_list, parsed_dict)
@@ -588,7 +606,7 @@ class OpenDrive:
         """
         f_version = version.replace(".", "")  # fix naming for files (X.X) -> (XX)
         opendrive_schema_path = os.path.join(
-            ESMINI_DIRECTORY_ROOT, "..", "OpenDrive_" + f_version
+            ESMINI_DIRECTORY_EXTERNALS, "OpenDrive_" + f_version
         )
         files_to_generate = [
             (
@@ -637,13 +655,19 @@ class OpenDrive:
         list_of_parsed_dict = []
         reference_list = []
         for opendrive, name in files_to_generate:
-            with open(opendrive, mode="r", encoding="utf-8") as input:
-                ref_list, parsed_dict = self.parser(input, name, version)
-                list_of_parsed_dict.append(parsed_dict)
-                reference_list = reference_list + ref_list
+            try:
+                with open(opendrive, mode="r", encoding="utf-8") as input:
+                    ref_list, parsed_dict = self.parser(input, name, version)
+                    list_of_parsed_dict.append(parsed_dict)
+                    reference_list = reference_list + ref_list
+            except OSError as e:
+                print(format_red(f"{e}"))
+        outputfolder = os.path.join(ESMINI_DIRECTORY_SUPPORT, "generated")
 
         for dict in list_of_parsed_dict:
             dict["data"] = self.find_core_reference(
                 reference_list, dict["data"], dict["name"]
             )
-            self.generate_file(dict, dict["name"])
+            self.generate_file(dict,outputfolder)
+
+        #Run.run_clang_format([outputfolder],[],False)
