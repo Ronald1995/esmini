@@ -25,6 +25,26 @@ class OpenDrive:
         # self.print_dict(output_file, data)
 
         # Handles the generation of shared.hpp to fix mutual inclusion problem
+        if data["name"] == "Road":
+            data = self.create_exception_shared(data, outputfolder)
+
+        # Generate the hpp file
+        self.create_hpp_files(output_file, data)
+
+    def create_exception_shared(self, data, outputfolder):
+        """
+        Generate a exception shared dictionary for "struct e_countryCode"
+        and generates a shared hpp file for the dictionary.\n
+        This to fix a problem with mutual inclusion between signal and road
+
+        Inputs:
+        ---------
+        dictionary (dict): the dictionary containing all parsed data
+        outputfolder (path): to the folder where the file should be generated
+        Returns:
+        ---------
+        dict <- with the "shared" object removed
+        """
         for key, value in data["data"].items():
             if "struct e_countryCode" in key:
                 shared = {}
@@ -35,9 +55,7 @@ class OpenDrive:
                 self.create_exception_shared_hpp(outputfolder, shared)
                 data["data"].pop(key)  # Remove e_countryCode to not generate it twice
                 break
-
-        # Generate the hpp file
-        self.create_hpp_files(output_file, data)
+        return data
 
     def create_exception_shared_hpp(self, outputfolder, data):
         """
@@ -153,24 +171,32 @@ class OpenDrive:
         list(tuples) <- list of tuples containing (child,parent) for inheritance
         """
         inheritance = []
-        for child, contains in root.items():  # (class/enum/struct,base)
+        for classname, classdict in root.items():
+            if isinstance(classdict, dict):
+                self.get_inheritance_rec(classdict, classname, inheritance)
+        return inheritance
+
+    def get_inheritance_rec(self, parent, classname, inheritance):
+        """
+        Looks through the dictionary and searches for inheritances
+            looks for the keyword ("choice") in dictionary to find inheritance
+
+        Inputs:
+        ---------
+        parent (dict):  dictionary to be searched
+        classname (str):
+        Returns:
+        ---------
+        list(tuples) <- list of tuples containing (childtype,classname) for inheritance
+        """
+        for child, contains in parent.items():
             if isinstance(contains, dict):
-                for _, base in contains.items():  # (base,opendriveelements..)
-                    if isinstance(base, dict):
-                        for (
-                            _,
-                            types,
-                        ) in (
-                            base.items()
-                        ):  # (opendriveelement,types(choice,sequence,attribute))
-                            if isinstance(types, dict):
-                                for type, attributes in types.items():  # (choice,items)
-                                    if type == "choice":
-                                        for _, items in attributes.items():
-                                            if "type" in items.keys():
-                                                inheritance.append(
-                                                    (items["type"], child)
-                                                )
+                if child == "choice":
+                    for _, items in contains.items():
+                        if "type" in items.keys():
+                            inheritance.append((items["type"], classname))
+                else:
+                    self.get_inheritance_rec(contains, classname, inheritance)
         return inheritance
 
     def create_inheritance(self, root):
@@ -288,9 +314,7 @@ class OpenDrive:
                         if value["type"] not in order:
                             order.append(value["type"])
                     if "std::vector" in value["type"]:
-                        temp_str = value["type"]
-                        temp_str = temp_str.replace("std::vector<", "")
-                        temp_str = temp_str.replace(">", "")
+                        temp_str = value["type"][12:-1]  # Removes "std::vector< >"
                         if temp_str in keys:
                             if temp_str not in order:
                                 order.append(temp_str)
@@ -321,9 +345,9 @@ class OpenDrive:
                                 value["type"] = refrence
                                 break
                             if "std::vector" in value["type"]:
-                                temp_str = value["type"]
-                                temp_str = temp_str.replace("std::vector<", "")
-                                temp_str = temp_str.replace(">", "")
+                                temp_str = value["type"][
+                                    12:-1
+                                ]  # Removes "std::vector< >"
                                 if temp_str == refrence.split("::")[-1]:
                                     value["type"] = "std::vector<" + refrence + ">"
                                     break
@@ -363,7 +387,7 @@ class OpenDrive:
                             if member in data_key:
                                 struct_members.append(data_key)
                                 members_dict.update({data_key: data.get(data_key)})
-                        # special case if struct contains values for core file
+                        # special case if struct contains values from core file
                         if (
                             member == "t_grEqZero" or member == "t_grZero"
                         ):  # TODO these comes from core.xsd
