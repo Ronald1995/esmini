@@ -1652,62 +1652,62 @@ int ScenarioPlayer::LoadParameterDistribution(std::string filename)
 
 int ScenarioPlayer::GetNumberOfVariables()
 {
-	return scenarioEngine->scenarioReader->variables.GetNumberOfVariables();
+	return scenarioEngine->scenarioReader->parameters.GetNumberOfVariables();
 }
 
-const char* ScenarioPlayer::GetVariableName(int index, OSCVariableDeclarations::VariableType* type)
+const char* ScenarioPlayer::GetVariableName(int index, OSCParameterDeclarations::ParameterType* type)
 {
-	return scenarioEngine->scenarioReader->variables.GetVariableName(index, type);
+	return GetParameterName(index, type);
 }
 
 int ScenarioPlayer::SetVariableValue(const char* name, const void* value)
 {
-	return scenarioEngine->scenarioReader->variables.setVariableValue(name, value);
+	return SetParameterValue(name, value);
 }
 
 int ScenarioPlayer::GetVariableValue(const char* name, void* value)
 {
-	return scenarioEngine->scenarioReader->variables.getVariableValue(name, value);
+	return GetParameterValue(name, value);
 }
 
 int ScenarioPlayer::GetVariableValueInt(const char* name, int& value)
 {
-	return scenarioEngine->scenarioReader->variables.getVariableValueInt(name, value);
+	return GetParameterValueInt(name, value);
 }
 
 int ScenarioPlayer::GetVariableValueDouble(const char* name, double& value)
 {
-	return scenarioEngine->scenarioReader->variables.getVariableValueDouble(name, value);
+	return GetParameterValueDouble(name, value);
 }
 
 int ScenarioPlayer::GetVariableValueString(const char* name, const char*& value)
 {
-	return scenarioEngine->scenarioReader->variables.getVariableValueString(name, value);
+	return GetParameterValueString(name, value);
 }
 
 int ScenarioPlayer::GetVariableValueBool(const char* name, bool& value)
 {
-	return scenarioEngine->scenarioReader->variables.getVariableValueBool(name, value);
+	return GetParameterValueBool(name, value);
 }
 
 int ScenarioPlayer::SetVariableValue(const char* name, int value)
 {
-	return scenarioEngine->scenarioReader->variables.setVariableValue(name, value);
+	return SetParameterValue(name, value);
 }
 
 int ScenarioPlayer::SetVariableValue(const char* name, double value)
 {
-	return scenarioEngine->scenarioReader->variables.setVariableValue(name, value);
+	return SetParameterValue(name, value);
 }
 
 int ScenarioPlayer::SetVariableValue(const char* name, const char* value)
 {
-	return scenarioEngine->scenarioReader->variables.setVariableValue(name, value);
+	return SetParameterValue(name, value);
 }
 
 int ScenarioPlayer::SetVariableValue(const char* name, bool value)
 {
-	return scenarioEngine->scenarioReader->variables.setVariableValue(name, value);
+	return SetParameterValue(name, value);
 }
 
 //todo

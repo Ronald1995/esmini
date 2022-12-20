@@ -38,14 +38,12 @@ namespace scenarioengine
 	ControllerPool ScenarioReader::controllerPool_ = controllerPoolStatic;
 
 	Parameters ScenarioReader::parameters;
-	Variables ScenarioReader::variables;
 }
 
 ScenarioReader::ScenarioReader(Entities* entities, Catalogs* catalogs, bool disable_controllers) :
 	entities_(entities), catalogs_(catalogs), disable_controllers_(disable_controllers)
 {
 	parameters.Clear();
-	variables.Clear();
 }
 
 ScenarioReader::~ScenarioReader()
@@ -518,12 +516,9 @@ Vehicle *ScenarioReader::parseOSCVehicle(pugi::xml_node vehicleNode)
 
 	// First check for parameter declaration
 	pugi::xml_node paramDecl = vehicleNode.child("ParameterDeclarations");
-	pugi::xml_node varDecl = vehicleNode.child("VariableDeclarations");
 
 	parameters.CreateRestorePoint();
 	parameters.addParameterDeclarations(paramDecl);
-	variables.CreateRestorePoint();
-	variables.addVariableDeclarations(varDecl);
 
 	vehicle->typeName_ = parameters.ReadAttribute(vehicleNode, "name");
 	vehicle->SetCategory(parameters.ReadAttribute(vehicleNode, "vehicleCategory"));
@@ -726,7 +721,6 @@ Vehicle *ScenarioReader::parseOSCVehicle(pugi::xml_node vehicleNode)
 	}
 
 	parameters.RestoreParameterDeclarations();
-	variables.RestoreVariableDeclarations();
 
 	return vehicle;
 }
@@ -822,12 +816,9 @@ MiscObject *ScenarioReader::parseOSCMiscObject(pugi::xml_node miscObjectNode)
 
 	// First check for parameter declaration
 	pugi::xml_node paramDecl = miscObjectNode.child("ParameterDeclarations");
-	pugi::xml_node varDecl = miscObjectNode.child("VariableDeclarations");
 
 	parameters.CreateRestorePoint();
 	parameters.addParameterDeclarations(paramDecl);
-	variables.CreateRestorePoint();
-	variables.addVariableDeclarations(varDecl);
 
 	miscObject->typeName_ = parameters.ReadAttribute(miscObjectNode, "name");
 	miscObject->SetCategory(parameters.ReadAttribute(miscObjectNode, "miscObjectCategory"));
@@ -878,7 +869,6 @@ MiscObject *ScenarioReader::parseOSCMiscObject(pugi::xml_node miscObjectNode)
 	}
 
 	parameters.RestoreParameterDeclarations();
-	variables.RestoreVariableDeclarations();
 
 	return miscObject;
 }
@@ -891,12 +881,9 @@ Controller *ScenarioReader::parseOSCObjectController(pugi::xml_node controllerNo
 
 	// First check for parameter declaration
 	pugi::xml_node paramDecl = controllerNode.child("ParameterDeclarations");
-	pugi::xml_node varDecl = controllerNode.child("VariableDeclarations");
 
 	parameters.CreateRestorePoint();
 	parameters.addParameterDeclarations(paramDecl);
-	variables.CreateRestorePoint();
-	variables.addVariableDeclarations(varDecl);
 
 	// Then read any properties
 	ParseOSCProperties(properties, controllerNode);
@@ -945,7 +932,6 @@ Controller *ScenarioReader::parseOSCObjectController(pugi::xml_node controllerNo
 		args.entities = entities_;
 		args.gateway = gateway_;
 		args.parameters = &parameters;
-		args.variables = &variables;
 		args.properties = &properties;
 		controller = (Controller *)ctrl_entry->instantiateFunction(&args);
 	}
@@ -956,7 +942,6 @@ Controller *ScenarioReader::parseOSCObjectController(pugi::xml_node controllerNo
 	}
 
 	parameters.RestoreParameterDeclarations();
-	variables.RestoreVariableDeclarations();
 
 	return controller;
 }
@@ -1888,6 +1873,7 @@ OSCGlobalAction *ScenarioReader::parseOSCGlobalAction(pugi::xml_node actionNode)
 					ParameterSetAction *paramSetAction = new ParameterSetAction();
 
 					// give user a message about depricated action.. use variable instead...
+					LOG("Depricated from OSC 1.2. Please use Variable SetAction instead. Accepting for this time.");
 
 					paramSetAction->name_ = parameters.ReadAttribute(actionChild, "parameterRef");
 					paramSetAction->value_ = parameters.ReadAttribute(paramChild, "value");
@@ -1909,9 +1895,9 @@ OSCGlobalAction *ScenarioReader::parseOSCGlobalAction(pugi::xml_node actionNode)
 				{
 					VariableSetAction *varSetAction = new VariableSetAction();
 
-					varSetAction->name_ = variables.ReadAttribute(actionChild, "variableRef");
-					varSetAction->value_ = variables.ReadAttribute(varChild, "value");
-					varSetAction->variables_ = &variables;
+					varSetAction->name_ = parameters.ReadAttribute(actionChild, "variableRef");
+					varSetAction->value_ = parameters.ReadAttribute(varChild, "value");
+					varSetAction->variables_ = &parameters;
 
 					action = varSetAction;
 				}
@@ -3533,10 +3519,10 @@ OSCCondition *ScenarioReader::parseOSCCondition(pugi::xml_node conditionNode)
 				else if (condition_type == "VariableCondition")
 				{
 					TrigByVariable *trigger = new TrigByVariable;
-					trigger->name_ = variables.ReadAttribute(byValueChild, "variableRef");
-					trigger->value_ = variables.ReadAttribute(byValueChild, "value");
-					trigger->rule_ = ParseRule(variables.ReadAttribute(byValueChild, "rule"));
-					trigger->variables_ = &variables;
+					trigger->name_ = parameters.ReadAttribute(byValueChild, "variableRef");
+					trigger->value_ = parameters.ReadAttribute(byValueChild, "value");
+					trigger->rule_ = ParseRule(parameters.ReadAttribute(byValueChild, "rule"));
+					trigger->variables_ = &parameters;
 					condition = trigger;
 				}
 				else if (condition_type == "StoryboardElementStateCondition")
@@ -3629,10 +3615,6 @@ void ScenarioReader::parseOSCManeuver(Maneuver *maneuver, pugi::xml_node maneuve
 		if (maneuverChildName == "ParameterDeclarations")
 		{
 			parameters.addParameterDeclarations(maneuverChild);
-		}
-		if (maneuverChildName == "VariableDeclarations")
-		{
-			variables.addVariableDeclarations(maneuverChild);
 		}
 		else if (maneuverChildName == "Event")
 		{

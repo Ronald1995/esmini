@@ -27,7 +27,9 @@ void Parameters::parseGlobalParameterDeclarations(pugi::xml_node osc_root_)
 	{
 		LOG("Unexpected non empty parameterDeclarations_ when about to parse global declarations");
 	}
+
 	parseParameterDeclarations(osc_root_.child("ParameterDeclarations"), &parameterDeclarations_);
+	parseParameterDeclarations(osc_root_.child("VariableDeclarations"), &parameterDeclarations_);
 }
 
 void Parameters::CreateRestorePoint()
@@ -384,6 +386,20 @@ std::string Parameters::ResolveParametersInString(std::string str)
 	return str;
 }
 
+int Parameters::GetNumberOfVariables()
+{
+	int counter = 0;
+	for (size_t i = 0; i < parameterDeclarations_.Parameter.size(); i++)
+	{
+		if (parameterDeclarations_.Parameter[i].variable)
+		{
+			counter++;
+		}
+	}
+
+	return counter;
+}
+
 static void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace) {
 	size_t pos = 0;
 	while ((pos = subject.find(search, pos)) != std::string::npos) {
@@ -463,13 +479,20 @@ std::string Parameters::ReadAttribute(pugi::xml_node node, std::string attribute
 	return "";
 }
 
-void Parameters::parseParameterDeclarations(pugi::xml_node parameterDeclarationsNode, OSCParameterDeclarations* pd)
+void Parameters::parseParameterDeclarations(pugi::xml_node declarationsNode, OSCParameterDeclarations* pd)
 {
-	for (pugi::xml_node pdChild = parameterDeclarationsNode.first_child(); pdChild; pdChild = pdChild.next_sibling())
+	bool is_variable = false;
+	if (!strcmp(declarationsNode.name(), "VariableDeclarations"))
+	{
+		is_variable = true;
+	}
+
+	for (pugi::xml_node pdChild = declarationsNode.first_child(); pdChild; pdChild = pdChild.next_sibling())
 	{
 		OSCParameterDeclarations::ParameterStruct param = { "", OSCParameterDeclarations::ParameterType::PARAM_TYPE_STRING, {0, 0, "", false} };
 
 		param.name = pdChild.attribute("name").value();
+		param.variable = is_variable;
 
 		// Check for catalog parameter assignements, overriding default value
 		// Start from end of parameter list, in case of duplicates we want the most recent
@@ -488,9 +511,13 @@ void Parameters::parseParameterDeclarations(pugi::xml_node parameterDeclarations
 		{
 			type_str = pdChild.attribute("parameterType").value();
 		}
+		else if (pdChild.attribute("variableType"))
+		{
+			type_str = pdChild.attribute("variableType").value();
+		}
 		else
 		{
-			LOG_TRACE_AND_QUIT("Missing parameter type (or wrongly spelled attribute) for %s", param.name.c_str());
+			LOG_TRACE_AND_QUIT("Missing parameter or variable type (or wrongly spelled attribute) for %s", param.name.c_str());
 		}
 
 		if (type_str == "integer" || type_str == "int")

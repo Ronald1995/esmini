@@ -811,52 +811,52 @@ extern "C"
 
 	SE_DLL_API int SE_SetVariable(SE_Variable variable)
 	{
-		return ScenarioReader::variables.setVariableValue(variable.name, variable.value);
+		return ScenarioReader::parameters.setParameterValue(variable.name, variable.value);
 	}
 
 	SE_DLL_API int SE_GetVariable(SE_Variable *variable)
 	{
-		return ScenarioReader::variables.getVariableValue(variable->name, variable->value);
+		return ScenarioReader::parameters.getParameterValue(variable->name, variable->value);
 	}
 
 	SE_DLL_API int SE_GetVariableInt(const char *variableName, int *value)
 	{
-		return ScenarioReader::variables.getVariableValueInt(variableName, *value);
+		return ScenarioReader::parameters.getParameterValueInt(variableName, *value);
 	}
 
 	SE_DLL_API int SE_GetVariableDouble(const char *variableName, double *value)
 	{
-		return ScenarioReader::variables.getVariableValueDouble(variableName, *value);
+		return ScenarioReader::parameters.getParameterValueDouble(variableName, *value);
 	}
 
 	SE_DLL_API int SE_GetVariableString(const char *variableName, const char **value)
 	{
-		return ScenarioReader::variables.getVariableValueString(variableName, *value);
+		return ScenarioReader::parameters.getParameterValueString(variableName, *value);
 	}
 
 	SE_DLL_API int SE_GetVariableBool(const char *variableName, bool *value)
 	{
-		return ScenarioReader::variables.getVariableValueBool(variableName, *value);
+		return ScenarioReader::parameters.getParameterValueBool(variableName, *value);
 	}
 
 	SE_DLL_API int SE_SetVariableInt(const char *variableName, int value)
 	{
-		return ScenarioReader::variables.setVariableValue(variableName, value);
+		return ScenarioReader::parameters.setParameterValue(variableName, value);
 	}
 
 	SE_DLL_API int SE_SetVariableDouble(const char *variableName, double value)
 	{
-		return ScenarioReader::variables.setVariableValue(variableName, value);
+		return ScenarioReader::parameters.setParameterValue(variableName, value);
 	}
 
 	SE_DLL_API int SE_SetVariableString(const char *variableName, const char *value)
 	{
-		return ScenarioReader::variables.setVariableValue(variableName, value);
+		return ScenarioReader::parameters.setParameterValue(variableName, value);
 	}
 
 	SE_DLL_API int SE_SetVariableBool(const char *variableName, bool value)
 	{
-		return ScenarioReader::variables.setVariableValue(variableName, value);
+		return ScenarioReader::parameters.setParameterValue(variableName, value);
 	}
 
 	SE_DLL_API void *SE_GetODRManager()
