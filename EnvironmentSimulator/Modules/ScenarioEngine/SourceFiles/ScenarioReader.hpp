@@ -148,6 +148,7 @@ namespace scenarioengine
 		std::vector<Controller*> controller_;
 
 		static Parameters parameters;  // static to enable set via callback during creation of object
+		static Parameters variables;
 
 	private:
 		pugi::xml_document doc_;

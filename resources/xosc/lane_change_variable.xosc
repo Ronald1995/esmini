@@ -3,10 +3,18 @@
 <!-- reference line. Purpose is to validate esmini lane change functionality.     -->
 <OpenSCENARIO>
     <FileHeader revMajor="1" revMinor="0" date="2019-06-09T10:00:00" description="Cut-in" author="esmini-team"/>
+    <ParameterDeclarations>
+        <ParameterDeclaration name="DummyParameter" parameterType="double" value="15"/>
+        <ParameterDeclaration name="DummyParameter2" parameterType="boolean" value="false"/>
+        <ParameterDeclaration name="DummyParameter3" parameterType="string" value="lane_change_param"/>
+        <ParameterDeclaration name="DummyParameter4" parameterType="string" value="lane_change_param"/>
+    </ParameterDeclarations>    
     <VariableDeclarations>
         <VariableDeclaration name="DummyVariable" variableType="double" value="2"/>
         <VariableDeclaration name="DummyVariable2" variableType="boolean" value="true"/>
         <VariableDeclaration name="DummyVariable3" variableType="string" value="lane_change_var"/>
+        <VariableDeclaration name="DummyVariable4" variableType="string" value="lane_change_var"/>
+        <VariableDeclaration name="DummyVariable5" variableType="string" value="lane_change_var"/>
     </VariableDeclarations>
     <CatalogLocations>
         <VehicleCatalog>

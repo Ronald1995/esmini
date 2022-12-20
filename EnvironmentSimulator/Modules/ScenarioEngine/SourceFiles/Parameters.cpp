@@ -386,20 +386,6 @@ std::string Parameters::ResolveParametersInString(std::string str)
 	return str;
 }
 
-int Parameters::GetNumberOfVariables()
-{
-	int counter = 0;
-	for (size_t i = 0; i < parameterDeclarations_.Parameter.size(); i++)
-	{
-		if (parameterDeclarations_.Parameter[i].variable)
-		{
-			counter++;
-		}
-	}
-
-	return counter;
-}
-
 static void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace) {
 	size_t pos = 0;
 	while ((pos = subject.find(search, pos)) != std::string::npos) {

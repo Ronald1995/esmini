@@ -1652,7 +1652,7 @@ int ScenarioPlayer::LoadParameterDistribution(std::string filename)
 
 int ScenarioPlayer::GetNumberOfVariables()
 {
-	return scenarioEngine->scenarioReader->parameters.GetNumberOfVariables();
+	return scenarioEngine->scenarioReader->variables.GetNumberOfParameters();
 }
 
 const char* ScenarioPlayer::GetVariableName(int index, OSCParameterDeclarations::ParameterType* type)
