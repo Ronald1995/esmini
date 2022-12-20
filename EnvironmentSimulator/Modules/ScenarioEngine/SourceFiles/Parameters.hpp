@@ -59,6 +59,8 @@ namespace scenarioengine
 
 		std::string ResolveParametersInString(std::string str);
 
+		int GetNumberOfVariables();
+
 		// Use always this method when reading attributes, it will resolve any variables
 		std::string ReadAttribute(pugi::xml_node, std::string attribute, bool required = false);
 

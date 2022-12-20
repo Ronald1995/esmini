@@ -739,7 +739,6 @@ int ScenarioEngine::parseScenario()
 	LOG("Loading %s (v%d.%d)", scenarioReader->getScenarioFilename().c_str(), scenarioReader->GetVersionMajor(), scenarioReader->GetVersionMinor());
 
 	scenarioReader->parseGlobalParameterDeclarations();
-	scenarioReader->parseGlobalVariableDeclarations();
 
 	// Now that parameter declaration has been parsed, call any registered callbacks before applying the parameters
 	if (paramDeclCallback.func != nullptr)
@@ -794,9 +793,9 @@ int ScenarioEngine::parseScenario()
 
 		if (i == file_name_candidates.size())
 		{
+			LOG((std::string("Failed to ") + (located ? "load" : "find") + " OpenDRIVE file " + getOdrFilename().c_str()).c_str());
 			throw std::invalid_argument(std::string("Failed to ") + (located ? "load" : "find") + \
 				" OpenDRIVE file " + std::string(getOdrFilename().c_str()));
-			LOG((std::string("Failed to ") + (located ? "load" : "find") + " OpenDRIVE file " + getOdrFilename().c_str()).c_str());
 			return -1;
 		}
 	}
