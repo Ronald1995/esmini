@@ -32,7 +32,6 @@ namespace scenarioengine
 
 		// ParameterDeclarations
 		void parseGlobalParameterDeclarations(pugi::xml_node osc_root_);
-		void parseGlobalVariableDeclarations(pugi::xml_node osc_root_);
 		void parseParameterDeclarations(pugi::xml_node xml_node, OSCParameterDeclarations* pd);
 		std::string getParameter(OSCParameterDeclarations& parameterDeclarations, std::string name);
 		std::string getParameter(std::string name) { return getParameter(parameterDeclarations_, name); }
@@ -58,8 +57,6 @@ namespace scenarioengine
 		std::string getParameterValueAsString(std::string name);
 
 		std::string ResolveParametersInString(std::string str);
-
-		int GetNumberOfVariables();
 
 		// Use always this method when reading attributes, it will resolve any variables
 		std::string ReadAttribute(pugi::xml_node, std::string attribute, bool required = false);

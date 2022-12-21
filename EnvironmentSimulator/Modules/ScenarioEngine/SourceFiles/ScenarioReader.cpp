@@ -38,7 +38,6 @@ namespace scenarioengine
 	ControllerPool ScenarioReader::controllerPool_ = controllerPoolStatic;
 
 	Parameters ScenarioReader::parameters;
-	Parameters ScenarioReader::variables;
 }
 
 ScenarioReader::ScenarioReader(Entities* entities, Catalogs* catalogs, bool disable_controllers) :
@@ -1873,8 +1872,8 @@ OSCGlobalAction *ScenarioReader::parseOSCGlobalAction(pugi::xml_node actionNode)
 				{
 					ParameterSetAction *paramSetAction = new ParameterSetAction();
 
-					// give user a message about depricated action.. use variable instead...
-					LOG("Depricated from OSC 1.2. Please use Variable SetAction instead. Accepting for this time.");
+					// give user a message about deprecated action.. use variable instead...
+					LOG("Deprecated from OSC 1.2. Please use Variable SetAction instead. Accepting for this time.");
 
 					paramSetAction->name_ = parameters.ReadAttribute(actionChild, "parameterRef");
 					paramSetAction->value_ = parameters.ReadAttribute(paramChild, "value");
@@ -1888,7 +1887,7 @@ OSCGlobalAction *ScenarioReader::parseOSCGlobalAction(pugi::xml_node actionNode)
 				}
 			}
 		}
-		if (actionChild.name() == std::string("VariableAction"))
+		else if (actionChild.name() == std::string("VariableAction"))
 		{
 			for (pugi::xml_node varChild = actionChild.first_child(); varChild; varChild = varChild.next_sibling())
 			{
@@ -3511,6 +3510,7 @@ OSCCondition *ScenarioReader::parseOSCCondition(pugi::xml_node conditionNode)
 				else if (condition_type == "ParameterCondition")
 				{
 					TrigByParameter *trigger = new TrigByParameter;
+
 					trigger->name_ = parameters.ReadAttribute(byValueChild, "parameterRef");
 					trigger->value_ = parameters.ReadAttribute(byValueChild, "value");
 					trigger->rule_ = ParseRule(parameters.ReadAttribute(byValueChild, "rule"));

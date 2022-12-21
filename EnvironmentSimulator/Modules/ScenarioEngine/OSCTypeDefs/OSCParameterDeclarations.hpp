@@ -45,10 +45,11 @@ namespace scenarioengine
 				std::string _string;
 				bool _bool = false;
 			} value;
-			bool variable = false;
+			// bool variable = false;
 		};
 
 		std::vector<ParameterStruct> Parameter;
+		// std::vector<ParameterStruct> Variable;
 
 		void* getValueFromStruct(ParameterStruct *p)
 		{

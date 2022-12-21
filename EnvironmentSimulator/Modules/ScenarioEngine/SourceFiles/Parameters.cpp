@@ -18,7 +18,6 @@ using namespace scenarioengine;
 void Parameters::addParameterDeclarations(pugi::xml_node xml_node)
 {
 	paramDeclarationsSize_.push((int)parameterDeclarations_.Parameter.size());
-	parseParameterDeclarations(xml_node, &parameterDeclarations_);
 }
 
 void Parameters::parseGlobalParameterDeclarations(pugi::xml_node osc_root_)
@@ -49,7 +48,7 @@ void Parameters::RestoreParameterDeclarations()
 	}
 	else
 	{
-		LOG("Unexpected empty parameterdeclaration counter, can't clear local declarations");
+		LOG("Unexpected empty parameter declaration counter, can't clear local declarations");
 	}
 }
 
@@ -467,18 +466,12 @@ std::string Parameters::ReadAttribute(pugi::xml_node node, std::string attribute
 
 void Parameters::parseParameterDeclarations(pugi::xml_node declarationsNode, OSCParameterDeclarations* pd)
 {
-	bool is_variable = false;
-	if (!strcmp(declarationsNode.name(), "VariableDeclarations"))
-	{
-		is_variable = true;
-	}
 
 	for (pugi::xml_node pdChild = declarationsNode.first_child(); pdChild; pdChild = pdChild.next_sibling())
 	{
 		OSCParameterDeclarations::ParameterStruct param = { "", OSCParameterDeclarations::ParameterType::PARAM_TYPE_STRING, {0, 0, "", false} };
 
 		param.name = pdChild.attribute("name").value();
-		param.variable = is_variable;
 
 		// Check for catalog parameter assignements, overriding default value
 		// Start from end of parameter list, in case of duplicates we want the most recent
