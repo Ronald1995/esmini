@@ -124,18 +124,28 @@ typedef struct
 
 typedef struct
 {
-	bool active;  // True: override; false: stop overriding
-	double value; // Depends on action, see SE_OverrideActionList
+	bool active;  		// True: override; false: stop overriding
+	double value; 		// Depends on action, see SE_OverrideActionList
+	double maxRate; 	// Depends on action, see SE_OverrideActionList
+	double maxTorque; 	// Depends on action, see SE_OverrideActionList
 } SE_OverrideActionStatus;
 
 typedef struct
 {
+	SE_OverrideActionStatus brakePercent;   // Depends on action, see SE_OverrideActionList
+	SE_OverrideActionStatus brakeForce; 	// Depends on action, see SE_OverrideActionList
+	SE_OverrideActionStatus autoGear; 		//  (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
+	SE_OverrideActionStatus manualGear;  	// Negative values are indicating reverse gears. Zero is neutral gear.
+} SE_OverrideActionGroup;
+
+typedef struct
+{
 	SE_OverrideActionStatus throttle;	   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
-	SE_OverrideActionStatus brake;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
+	SE_OverrideActionGroup brake;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
 	SE_OverrideActionStatus clutch;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
-	SE_OverrideActionStatus parkingBrake;  // Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
+	SE_OverrideActionGroup parkingBrake;   // Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
 	SE_OverrideActionStatus steeringWheel; // Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
-	SE_OverrideActionStatus gear;		   // Gear number. (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
+	SE_OverrideActionGroup gear;		   // Gear status
 } SE_OverrideActionList;
 
 typedef struct
@@ -151,9 +161,9 @@ typedef struct
 	float t;           // lateral position from road reference line
 	const char* name;  // sign name, typically used for 3D model filename
 	int orientation;   // 1=facing traffic in road direction, -1=facing traffic opposite road direction
-	float length;      // length as sepcified in OpenDRIVE
-	float height;      // height as sepcified in OpenDRIVE
-	float width;       // width as sepcified in OpenDRIVE
+	float length;      // length as specified in OpenDRIVE
+	float height;      // height as specified in OpenDRIVE
+	float width;       // width as specified in OpenDRIVE
 } SE_RoadSign;
 
 typedef struct

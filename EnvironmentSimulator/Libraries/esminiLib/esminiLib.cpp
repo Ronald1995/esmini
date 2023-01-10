@@ -185,16 +185,31 @@ static int copyOverrideActionListfromScenarioEngine(SE_OverrideActionList *list,
 
 	list->throttle.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].active;
 	list->throttle.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].value;
-	list->brake.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].active;
-	list->brake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].value;
+	list->throttle.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].maxRate;
+	list->brake.brakePercent.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].active;
+	list->brake.brakePercent.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].value;
+	list->brake.brakePercent.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].maxRate;
+	list->brake.brakeForce.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].active;
+	list->brake.brakeForce.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].value;
+	list->brake.brakeForce.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].maxRate;
 	list->clutch.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].active;
 	list->clutch.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].value;
-	list->parkingBrake.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].active;
-	list->parkingBrake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].value;
+	list->clutch.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].maxRate;
+	list->parkingBrake.brakePercent.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].active;
+	list->parkingBrake.brakePercent.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].value;
+	list->parkingBrake.brakePercent.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].maxRate;
+	list->parkingBrake.brakeForce.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].active;
+	list->parkingBrake.brakeForce.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].value;
+	list->parkingBrake.brakeForce.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].maxRate;
 	list->steeringWheel.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].active;
 	list->steeringWheel.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].value;
-	list->gear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].active;
-	list->gear.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].value;
+	list->steeringWheel.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].maxRate;
+	list->steeringWheel.maxTorque = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].maxTorque;
+	list->gear.autoGear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].active;
+	list->gear.autoGear.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].value;
+	list->gear.manualGear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].active;
+	list->gear.manualGear.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].value;
+
 
 	return 0;
 }

@@ -68,21 +68,26 @@ namespace scenarioengine
 
 		typedef enum
 		{
-			OVERRIDE_THROTTLE = 0,		 // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
-			OVERRIDE_BRAKE = 1,			 // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
-			OVERRIDE_CLUTCH = 2,		 // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
-			OVERRIDE_PARKING_BRAKE = 3,	 // Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
-			OVERRIDE_STEERING_WHEEL = 4, // Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
-			OVERRIDE_GEAR = 5,			 // Gear number. (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
-			OVERRIDE_NR_TYPES = 6,
-			OVERRIDE_UNDEFINED = 7
+			OVERRIDE_THROTTLE = 0,		 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
+			OVERRIDE_BRAKE_PERCENT = 1,	 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
+			OVERRIDE_BRAKE_FORCE = 2,	 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
+			OVERRIDE_CLUTCH = 3,		 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
+			OVERRIDE_PARKING_BRAKE_PERCENT = 4,	 	// Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
+			OVERRIDE_PARKING_BRAKE_FORCE = 5,	 	// Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
+			OVERRIDE_STEERING_WHEEL = 6, 			// Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
+			OVERRIDE_GEAR_AUTO = 7,			 		// Gear number. (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
+			OVERRIDE_GEAR_MANUAl = 8,			 	// Gear number. Negative values are indicating reverse gears. Zero is neutral gear.
+			OVERRIDE_NR_TYPES = 9,
+			OVERRIDE_UNDEFINED = 10
 		} OverrideType;
 
 		typedef struct
 		{
 			OverrideType type;
-			bool active;  // True: override; false: stop overriding
-			double value; // Depends on action, see SE_OverrideActionList
+			bool active;  		// True: override; false: stop overriding
+			double value; 		// Depends on action, see SE_OverrideActionList
+			double maxRate;		// Depends on action, see SE_OverrideActionList
+			double maxTorque;	// Depends on action, see SE_OverrideActionList
 		} OverrideActionStatus;
 
 
