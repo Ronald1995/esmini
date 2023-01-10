@@ -240,8 +240,16 @@ int RoadGeom::AddRoadMarks(roadmanager::Lane* lane, osg::Group* parent)
 
 					for (size_t q = 0; q < osi_points.size(); q++)
 					{
+						double l0p0l[2] = {0.0, 0.0};
+						double l0p0r[2] = {0.0, 0.0};
+						double l0p1l[2] = {0.0, 0.0};
+						double l0p1r[2] = {0.0, 0.0};
+						double l1p0l[2] = {0.0, 0.0};
+						double l1p0r[2] = {0.0, 0.0};
+						double l1p1l[2] = {0.0, 0.0};
+						double l1p1r[2] = {0.0, 0.0};
+
 						// Find offset points of solid roadmark at each OSI point
-						double l0p0l[2], l0p0r[2], l0p1l[2], l0p1r[2], l1p0l[2], l1p0r[2], l1p1l[2], l1p1r[2];
 
 						if (q < osi_points.size() - 1)
 						{

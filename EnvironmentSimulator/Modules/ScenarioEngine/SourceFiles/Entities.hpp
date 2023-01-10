@@ -392,6 +392,7 @@ namespace scenarioengine
 		public:
 			double dx_;
 			TrailerHitch(double dx) : dx_(dx) {}
+			TrailerHitch(TrailerHitch&) = default;
 			TrailerHitch() : dx_(0.0), trailer_vehicle_(nullptr) {}
 			Object* trailer_vehicle_;  // reference to trailer vehicle
 		};
@@ -402,6 +403,7 @@ namespace scenarioengine
 			double dx_;
 			TrailerCoupler(double dx, Object* tow_vehicle) : dx_(dx), tow_vehicle_(tow_vehicle) {}
 			TrailerCoupler() : dx_(0.0), tow_vehicle_(nullptr) {}
+			TrailerCoupler(const TrailerCoupler&) = default;
 			Object* tow_vehicle_;  // reference to tow vehicle
 		};
 
