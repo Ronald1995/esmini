@@ -124,28 +124,54 @@ typedef struct
 
 typedef struct
 {
+	double value;	    // Depends on action, see SE_OverrideActionList
+	double maxRate;		// Depends on action, see SE_OverrideActionList
+} SE_OverrideActionValueBrake;
+
+typedef struct
+{
+	double value; 		    // Depends on action, see SE_OverrideActionList
+	bool selected;          // Status which gear selected.
+} SE_OverrideActionValueGear;
+
+typedef struct
+{
+	bool active;							 // True: override; false: stop overriding
+    SE_OverrideActionValueGear autoGear; 	 //  (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
+	SE_OverrideActionValueGear manualGear; 	 // Negative values are indicating reverse gears. Zero is neutral gear.
+} SE_OverrideActionStatusGear;
+
+typedef struct
+{
+	bool active; 							    // True: override; false: stop overriding
+    SE_OverrideActionValueBrake brakePercent;   // Depends on action, see SE_OverrideActionList
+	SE_OverrideActionValueBrake brakeForce; 	// Depends on action, see SE_OverrideActionList
+} SE_OverrideActionStatusBrake;
+
+typedef struct
+{
+	bool active;        // True: override; false: stop overriding
+	double value; 		// Depends on action, see SE_OverrideActionList
+	double maxRate; 	// Depends on action, see SE_OverrideActionList
+} SE_OverrideActionStatusPedals;
+
+typedef struct
+{
 	bool active;  		// True: override; false: stop overriding
 	double value; 		// Depends on action, see SE_OverrideActionList
 	double maxRate; 	// Depends on action, see SE_OverrideActionList
 	double maxTorque; 	// Depends on action, see SE_OverrideActionList
-} SE_OverrideActionStatus;
+} SE_OverrideActionStatusSteering;
+
 
 typedef struct
 {
-	SE_OverrideActionStatus brakePercent;   // Depends on action, see SE_OverrideActionList
-	SE_OverrideActionStatus brakeForce; 	// Depends on action, see SE_OverrideActionList
-	SE_OverrideActionStatus autoGear; 		//  (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
-	SE_OverrideActionStatus manualGear;  	// Negative values are indicating reverse gears. Zero is neutral gear.
-} SE_OverrideActionGroup;
-
-typedef struct
-{
-	SE_OverrideActionStatus throttle;	   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
-	SE_OverrideActionGroup brake;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
-	SE_OverrideActionStatus clutch;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
-	SE_OverrideActionGroup parkingBrake;   // Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
-	SE_OverrideActionStatus steeringWheel; // Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
-	SE_OverrideActionGroup gear;		   // Gear status
+	SE_OverrideActionStatusPedals throttle;	   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
+	SE_OverrideActionStatusBrake brake;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
+	SE_OverrideActionStatusPedals clutch;		   // Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
+	SE_OverrideActionStatusBrake parkingBrake;   // Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
+	SE_OverrideActionStatusSteering steeringWheel; // Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
+	SE_OverrideActionStatusGear gear;		   // Gear status
 } SE_OverrideActionList;
 
 typedef struct

@@ -104,7 +104,7 @@
                         <PrivateAction>
                            <ControllerAction>
                               <OverrideControllerValueAction>
-                                  <Gear number="100" active="false"/>
+                                  <Gear number="100" active="true"/>
                               </OverrideControllerValueAction>
                            </ControllerAction>
                         </PrivateAction>
