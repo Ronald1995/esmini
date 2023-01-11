@@ -69,26 +69,36 @@ namespace scenarioengine
 		typedef enum
 		{
 			OVERRIDE_THROTTLE = 0,		 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the throttle pedal.
-			OVERRIDE_BRAKE_PERCENT = 1,	 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
-			OVERRIDE_BRAKE_FORCE = 2,	 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the brake pedal.
-			OVERRIDE_CLUTCH = 3,		 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
-			OVERRIDE_PARKING_BRAKE_PERCENT = 4,	 	// Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
-			OVERRIDE_PARKING_BRAKE_FORCE = 5,	 	// Value range: [0..1]. 0 represents 0%, The value 1 represent the maximum parking brake state.
-			OVERRIDE_STEERING_WHEEL = 6, 			// Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
-			OVERRIDE_GEAR_AUTO = 7,			 		// Gear number. (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
-			OVERRIDE_GEAR_MANUAl = 8,		 		// Gear number. Negative values are indicating reverse gears. Zero is neutral gear.
-			OVERRIDE_NR_TYPES = 9,
-			OVERRIDE_UNDEFINED = 10
+			OVERRIDE_BRAKE = 1,	 					// Value range: [0..1]
+			OVERRIDE_CLUTCH = 2,		 			// Value range: [0..1]. 0 represents 0%, 1 represents 100% of pressing the clutch pedal.
+			OVERRIDE_PARKING_BRAKE = 3,	 			// Value range: [0..1]
+			OVERRIDE_STEERING_WHEEL = 4, 			// Steering wheel angle. Unit: rad. (0: Neutral position, positive: Left, negative: Right)
+			OVERRIDE_GEAR = 5,		 				// Gear number. Depends on type (manual, automatic)
+			OVERRIDE_NR_TYPES = 6,
+			OVERRIDE_UNDEFINED = 7
 		} OverrideType;
 
-		typedef struct
+		enum class OverrideGearType
 		{
-			OverrideType type;
-			bool active;  		 			 // True: override; false: stop overriding
-			double value; 		 			 // Depends on action, see SE_OverrideActionList
-			double maxRate;		 			 // Depends on action, see SE_OverrideActionList
-			double maxTorque;	 		     // Depends on action, see SE_OverrideActionList
-		} OverrideActionStatus;
+			Manual,
+			Automatic
+		};
+
+		enum class OverrideBrakeType
+		{
+			Percent,
+			Force
+		};
+
+		struct OverrideActionStatus
+		{
+			int type = static_cast<int>(OVERRIDE_UNDEFINED);	 // depends on override action type, e.g. OverrideBrakeType, OverrideGearType
+			bool active = false; 								 // True: override; false: stop overriding
+			double value = 0.0; 								 // Depends on action, see SE_OverrideActionList
+			double maxRate = -1.0;								 // Depends on action, see SE_OverrideActionList
+			double maxTorque = -1.0;							 // Depends on action, see SE_OverrideActionList
+			int number = 0;										 // Currently (OSC 1.2) only used for Gear
+		};
 
 
 		typedef struct
@@ -108,7 +118,7 @@ namespace scenarioengine
 		} Axle;
 
 		// Allocate vector for all possible override status
-		OverrideActionStatus overrideActionList[OVERRIDE_NR_TYPES];
+		OverrideActionStatus overrideActionList[OverrideType::OVERRIDE_NR_TYPES];
 
 		Type type_;
 		int category_; // specific object category in vehicle, pedestrian or misobject

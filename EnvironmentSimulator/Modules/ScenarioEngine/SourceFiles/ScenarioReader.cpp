@@ -2816,7 +2816,7 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 								}
 							}
 							// version 1.2 with brake attribute
-							else if ((verFromMinor2) && ((controllerDefNode.first_child().name() == std::string("BrakePercent")) || 
+							else if ((verFromMinor2) && ((controllerDefNode.first_child().name() == std::string("BrakePercent")) ||
 								(controllerDefNode.first_child().name() == std::string("BrakeForce"))))
 							{
 								double value = strtod(parameters.ReadAttribute(controllerDefNode.first_child(), "value"));
@@ -2868,7 +2868,7 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 								}
 							}
 							// version 1.2 with parking_brake attribute
-							else if ((verFromMinor2) && ((controllerDefNode.first_child().name() == std::string("BrakePercent")) || 
+							else if ((verFromMinor2) && ((controllerDefNode.first_child().name() == std::string("BrakePercent")) ||
 								(controllerDefNode.first_child().name() == std::string("BrakeForce"))))
 							{
 								double value = strtod(parameters.ReadAttribute(controllerDefNode.first_child(), "value"));
@@ -2901,7 +2901,7 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 							}
 						}
 						else if (controllerDefNode.name() == std::string("SteeringWheel"))
-						{ 
+						{
 							double value = strtod(parameters.ReadAttribute(controllerDefNode, "value"));
 							overrideStatus.type = Object::OverrideType::OVERRIDE_STEERING_WHEEL;
 							overrideStatus.value = override_action->RangeCheckAndErrorLog(overrideStatus.type, value, -2 * M_PI, 2 * M_PI);
@@ -2925,14 +2925,14 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 								if (!(controllerDefNode.attribute("number").empty())) // version 1.1.1 with number attribute
 								{
 									overrideStatus.type = Object::OverrideType::OVERRIDE_GEAR_MANUAl;
-									double value = strtod(parameters.ReadAttribute(controllerDefNode, "number"));
-									overrideStatus.value = override_action->RangeCheckAndErrorLog(overrideStatus.type, value, -1, 8, true);
+									// Skip range check since valid range is [-inf, inf]
+									overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode, "number"));
 								}
 								else if (!(controllerDefNode.attribute("value").empty())) // version 1.1.1 with value attribute
 								{
 									overrideStatus.type = Object::OverrideType::OVERRIDE_GEAR_MANUAl;
-									double value = strtod(parameters.ReadAttribute(controllerDefNode, "value"));
-									overrideStatus.value = override_action->RangeCheckAndErrorLog(overrideStatus.type, value, -1, 8, true);
+									// Skip range check since valid range is [-inf, inf]
+									overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode, "value"));
 									LOG("Unexpected Gear attribute name, change value to number, Accepting this time");
 								}
 								else
@@ -2945,40 +2945,41 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 							// version 1.2 with AutomaticGear attribute
 							else if ((verFromMinor2) && controllerDefNode.first_child().name() == std::string("AutomaticGear"))
 							{
-								double value;
-								std::string value_str = parameters.ReadAttribute(controllerDefNode.first_child(), "gear");
-								if (value_str == std::string("r"))
+								int number;
+								std::string number_str = parameters.ReadAttribute(controllerDefNode.first_child(), "gear");
+								if (number_str == std::string("r"))
 								{
-									value = -1.0;
+									number = -1;
 								}
-								else if (value_str == std::string("p"))
+								else if (number_str == std::string("p"))
 								{
-									value = 1.0;
+									number = 1;
 								}
-								else if (value_str == std::string("n"))
+								else if (number_str == std::string("n"))
 								{
-									value = 0.0;
+									number = 0;
 								}
-								else if (value_str == std::string("d"))
+								else if (number_str == std::string("d"))
 								{
-									value = 2.0;
+									number = 2;
 								}
 								else
 								{
-									LOG("Unexpected AutomaticGear number: %s", value_str.c_str());
+									LOG("Unexpected AutomaticGear number: %s", number_str.c_str());
 									delete override_action;
 								    return 0;
 								}
 
 								overrideStatus.type = Object::OverrideType::OVERRIDE_GEAR_AUTO;
-								overrideStatus.value = override_action->RangeCheckAndErrorLog(overrideStatus.type, value, -1, 8, true);
+								// Range check was done above
+								overrideStatus.number = number;
 							}
 							// version 1.2 with ManualGear attribute
 							else if ((verFromMinor2) && controllerDefNode.first_child().name() == std::string("ManualGear"))
 							{
-								double value = strtod(parameters.ReadAttribute(controllerDefNode.first_child(), "number"));
 								overrideStatus.type = Object::OverrideType::OVERRIDE_GEAR_MANUAl;
-								overrideStatus.value = override_action->RangeCheckAndErrorLog(overrideStatus.type, value, -1, 8, true);
+								// Skip range check since valid range is [-inf, inf]
+								overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode.first_child(), "number"));
 							}
 							else
 							{

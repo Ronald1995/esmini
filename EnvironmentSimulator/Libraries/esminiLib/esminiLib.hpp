@@ -124,45 +124,35 @@ typedef struct
 
 typedef struct
 {
-	double value;	    // Depends on action, see SE_OverrideActionList
-	double maxRate;		// Depends on action, see SE_OverrideActionList
-} SE_OverrideActionValueBrake;
-
-typedef struct
-{
-	double value; 		    // Depends on action, see SE_OverrideActionList
-	bool selected;          // Status which gear selected.
-} SE_OverrideActionValueGear;
-
-typedef struct
-{
 	bool active;							 // True: override; false: stop overriding
-    SE_OverrideActionValueGear autoGear; 	 //  (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
-	SE_OverrideActionValueGear manualGear; 	 // Negative values are indicating reverse gears. Zero is neutral gear.
+	int type;								 // According to Entities::OverrideType
+	int number;
+	// Manual type: Negative number are indicating reverse gears. Zero is neutral gear.
+	// Automatic type: (-1:Reverse, 0:Neutral, 1:Gear 1, 2:Gear 2, and so on.)
 } SE_OverrideActionStatusGear;
 
 typedef struct
 {
-	bool active; 							    // True: override; false: stop overriding
-    SE_OverrideActionValueBrake brakePercent;   // Depends on action, see SE_OverrideActionList
-	SE_OverrideActionValueBrake brakeForce; 	// Depends on action, see SE_OverrideActionList
+	bool active; 		// True: override; false: stop overriding
+	int type;			// According to Entities::OverrideType
+	double value;	    // BrakeType will define how to interpret the value
+	double maxRate;		// -1.0 indicates not set
 } SE_OverrideActionStatusBrake;
 
 typedef struct
 {
 	bool active;        // True: override; false: stop overriding
 	double value; 		// Depends on action, see SE_OverrideActionList
-	double maxRate; 	// Depends on action, see SE_OverrideActionList
+	double maxRate; 	// -1.0 indicates not set
 } SE_OverrideActionStatusPedals;
 
 typedef struct
 {
 	bool active;  		// True: override; false: stop overriding
 	double value; 		// Depends on action, see SE_OverrideActionList
-	double maxRate; 	// Depends on action, see SE_OverrideActionList
-	double maxTorque; 	// Depends on action, see SE_OverrideActionList
+	double maxRate; 	// Depends on action, see SE_OverrideActionList, -1.0 indicates not set
+	double maxTorque; 	// Depends on action, see SE_OverrideActionList, -1.0 indicates not set
 } SE_OverrideActionStatusSteering;
-
 
 typedef struct
 {

@@ -182,15 +182,17 @@ static int copyOverrideActionListfromScenarioEngine(SE_OverrideActionList *list,
 	{
 		return -1;
 	}
-	if (obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].active ||
-		obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].active)
-	{
-		list->brake.active = true;
-	}
-	else
-	{
-		list->brake.active = false;
-	}
+
+	list->brake.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].active;
+	list->brake.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].maxRate;
+	list->brake.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].type;
+	list->brake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].value;
+
+	list->gear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].active;
+	list->gear.number = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].number;
+	list->gear.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].type;
+#if 0
+
 	if (obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].active ||
 		obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].active)
 	{
@@ -233,7 +235,7 @@ static int copyOverrideActionListfromScenarioEngine(SE_OverrideActionList *list,
 	list->gear.manualGear.selected = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].active;
 	list->gear.autoGear.selected = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].active;
 
-
+#endif
 	return 0;
 }
 
