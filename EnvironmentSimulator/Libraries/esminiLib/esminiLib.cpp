@@ -188,54 +188,28 @@ static int copyOverrideActionListfromScenarioEngine(SE_OverrideActionList *list,
 	list->brake.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].type;
 	list->brake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].value;
 
+	list->parkingBrake.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].active;
+	list->parkingBrake.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].maxRate;
+	list->parkingBrake.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].type;
+	list->parkingBrake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].value;
+
 	list->gear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].active;
 	list->gear.number = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].number;
 	list->gear.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].type;
-#if 0
 
-	if (obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].active ||
-		obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].active)
-	{
-		list->parkingBrake.active = true;
-	}
-	else
-	{
-		list->parkingBrake.active = false;
-	}
-	if (obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].active ||
-		obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].active)
-	{
-		list->gear.active = true;
-	}
-	else
-	{
-		list->gear.active = false;
-	}
+	list->clutch.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].active;
+	list->clutch.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].value;
+	list->clutch.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].maxRate;
 
 	list->throttle.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].active;
 	list->throttle.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].value;
 	list->throttle.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_THROTTLE].maxRate;
-	list->brake.brakePercent.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].value;
-	list->brake.brakePercent.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_PERCENT].maxRate;
-	list->brake.brakeForce.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].value;
-	list->brake.brakeForce.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE_FORCE].maxRate;
-	list->clutch.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].active;
-	list->clutch.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].value;
-	list->clutch.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].maxRate;
-	list->parkingBrake.brakePercent.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].value;
-	list->parkingBrake.brakePercent.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_PERCENT].maxRate;
-	list->parkingBrake.brakeForce.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].value;
-	list->parkingBrake.brakeForce.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE_FORCE].maxRate;
+
 	list->steeringWheel.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].active;
-	list->steeringWheel.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].value;
 	list->steeringWheel.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].maxRate;
 	list->steeringWheel.maxTorque = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].maxTorque;
-	list->gear.autoGear.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].value;
-	list->gear.manualGear.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].value;
-	list->gear.manualGear.selected = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_MANUAl].active;
-	list->gear.autoGear.selected = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR_AUTO].active;
+	list->steeringWheel.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_STEERING_WHEEL].value;
 
-#endif
 	return 0;
 }
 

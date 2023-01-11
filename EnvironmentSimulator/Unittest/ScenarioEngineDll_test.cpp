@@ -1298,7 +1298,7 @@ TEST(TestGetAndSet, OverrideActionTest)
 	EXPECT_EQ(list.steeringWheel.active, false);
 	EXPECT_DOUBLE_EQ(list.steeringWheel.value, 0.0);
 	EXPECT_EQ(list.brake.active, false);
-	EXPECT_DOUBLE_EQ(list.brake.brakePercent.value, 0.7);
+	EXPECT_DOUBLE_EQ(list.brake.value, 0.7);
 
 	for (; t < 5.1; t += dt)
 	{
@@ -1311,20 +1311,19 @@ TEST(TestGetAndSet, OverrideActionTest)
 	EXPECT_DOUBLE_EQ(list.clutch.value, 0.7);
 	EXPECT_EQ(list.steeringWheel.active, false);
 	EXPECT_NEAR(list.steeringWheel.value, 2 * M_PI, 6.3);
-	EXPECT_DOUBLE_EQ(list.gear.manualGear.value, 8);
+	EXPECT_DOUBLE_EQ(list.gear.number, 8);
 	EXPECT_EQ(list.gear.active, true);
 	EXPECT_EQ(list.parkingBrake.active, true);
-	EXPECT_DOUBLE_EQ(list.parkingBrake.brakePercent.value, 0);
+	EXPECT_DOUBLE_EQ(list.parkingBrake.value, 0);
 
 	for (; t <7.1; t += dt)
 	{
 		SE_StepDT(dt);
 	}
 	EXPECT_EQ(SE_GetOverrideActionStatus(0, &list), 0);
-	EXPECT_DOUBLE_EQ(list.gear.manualGear.value, 8);
+	EXPECT_DOUBLE_EQ(list.gear.number, 8);
 	EXPECT_EQ(list.gear.active, true);
-	EXPECT_EQ(list.gear.manualGear.selected, true);
-	EXPECT_EQ(list.gear.autoGear.selected, false);
+	EXPECT_EQ(list.gear.type, true);
 
 	SE_Close();
 }
