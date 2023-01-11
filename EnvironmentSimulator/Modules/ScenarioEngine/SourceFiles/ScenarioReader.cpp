@@ -2927,12 +2927,12 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 								if (!(controllerDefNode.attribute("number").empty())) // version 1.1.1 with number attribute
 								{
 									// Skip range check since valid range is [-inf, inf]
-									overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode, "number"));
+									overrideStatus.number = round(strtoi(parameters.ReadAttribute(controllerDefNode, "number")));
 								}
 								else if (!(controllerDefNode.attribute("value").empty())) // version 1.1.1 with value attribute
 								{
 									// Skip range check since valid range is [-inf, inf]
-									overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode, "value"));
+									overrideStatus.number = round(strtoi(parameters.ReadAttribute(controllerDefNode, "value")));
 									LOG("Unexpected Gear attribute name, change value to number, Accepting this time");
 								}
 								else
@@ -2979,7 +2979,7 @@ OSCPrivateAction *ScenarioReader::parseOSCPrivateAction(pugi::xml_node actionNod
 							{
 								overrideStatus.value_type = static_cast<int>(Object::OverrideGearType::Manual);
 								// Skip range check since valid range is [-inf, inf]
-								overrideStatus.number = strtoi(parameters.ReadAttribute(controllerDefNode.first_child(), "number"));
+								overrideStatus.number = round(strtoi(parameters.ReadAttribute(controllerDefNode.first_child(), "number")));
 							}
 							else
 							{
