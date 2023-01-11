@@ -187,15 +187,18 @@ static int copyOverrideActionListfromScenarioEngine(SE_OverrideActionList *list,
 	list->brake.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].maxRate;
 	list->brake.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].type;
 	list->brake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].value;
+	list->brake.value_type = obj->overrideActionList[Object::OverrideType::OVERRIDE_BRAKE].value_type;
 
 	list->parkingBrake.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].active;
 	list->parkingBrake.maxRate = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].maxRate;
 	list->parkingBrake.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].type;
 	list->parkingBrake.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].value;
+	list->parkingBrake.value_type = obj->overrideActionList[Object::OverrideType::OVERRIDE_PARKING_BRAKE].value_type;
 
 	list->gear.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].active;
 	list->gear.number = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].number;
 	list->gear.type = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].type;
+	list->gear.value_type = obj->overrideActionList[Object::OverrideType::OVERRIDE_GEAR].value_type;
 
 	list->clutch.active = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].active;
 	list->clutch.value = obj->overrideActionList[Object::OverrideType::OVERRIDE_CLUTCH].value;

@@ -80,24 +80,25 @@ namespace scenarioengine
 
 		enum class OverrideGearType
 		{
-			Manual,
-			Automatic
+			Manual = 0,
+			Automatic = 1
 		};
 
 		enum class OverrideBrakeType
 		{
-			Percent,
-			Force
+			Percent = 0,
+			Force = 1
 		};
 
 		struct OverrideActionStatus
 		{
-			int type = static_cast<int>(OVERRIDE_UNDEFINED);	 // depends on override action type, e.g. OverrideBrakeType, OverrideGearType
+			int type = static_cast<int>(OVERRIDE_UNDEFINED);     // according to OverrideType
 			bool active = false; 								 // True: override; false: stop overriding
 			double value = 0.0; 								 // Depends on action, see SE_OverrideActionList
 			double maxRate = -1.0;								 // Depends on action, see SE_OverrideActionList
 			double maxTorque = -1.0;							 // Depends on action, see SE_OverrideActionList
 			int number = 0;										 // Currently (OSC 1.2) only used for Gear
+			int value_type = 0;									 // depends on override action type, e.g. OverrideBrakeType, OverrideGearType
 		};
 
 

@@ -1363,7 +1363,7 @@ TEST(TestGetAndSet, OverrideActionTestver1_2)
 	EXPECT_EQ(list.clutch.active, false);
 	EXPECT_DOUBLE_EQ(list.clutch.value, 1.0);
 	EXPECT_EQ(list.brake.active, true);
-	EXPECT_DOUBLE_EQ(list.brake.brakePercent.value, 0.7);
+	EXPECT_DOUBLE_EQ(list.brake.value, 0.7);
 	EXPECT_EQ(list.steeringWheel.active, false);
 	EXPECT_NEAR(list.steeringWheel.value, 2 * M_PI, 6.3);
 
